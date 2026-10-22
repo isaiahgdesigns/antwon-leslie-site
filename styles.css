@@ -83,7 +83,7 @@ p { margin: 0; }
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 250px); gap: 40px; align-items: start;
 }
 .hero-name {
-  display: flex; flex-direction: column;
+  display: flex; flex-direction: column; align-items: flex-start;
   font-size: clamp(4.2rem, 15vw, 13rem);
   line-height: 0.82; padding-bottom: 6px; text-transform: uppercase; font-weight: 900; letter-spacing: -0.012em;
 }
@@ -98,24 +98,15 @@ p { margin: 0; }
 .hero-frame video, .hero-frame img { width: 100%; height: 100%; object-fit: cover; }
 .hero-line { transform-origin: left center; animation: draw 2.2s cubic-bezier(.45,.05,.4,1) .3s both; }
 
-/* One-time board ride: the board leads the line as it draws, pops one ollie, and rolls off */
-.board-ride {
-  position: absolute; left: -90px; bottom: 9px; z-index: 2; pointer-events: none;
-  animation: ride 2.2s cubic-bezier(.45,.05,.4,1) .3s both;
-}
-.board { display: block; transform-origin: 50% 80%; animation: ollie 2.2s linear .3s both; }
-/* The ride waits until the line is on screen (app.js adds .ride-go), so phones see it too */
-.hero-line, .board-ride, .board { animation-play-state: paused; }
-.hero.ride-go .hero-line, .hero.ride-go .board-ride, .hero.ride-go .board { animation-play-state: running; }
-@keyframes ride { from { transform: translateX(0); } to { transform: translateX(calc(100vw + 90px)); } }
-@keyframes ollie {
-  0%, 58% { transform: translateY(0) rotate(0); }
-  64% { transform: translateY(-3px) rotate(-14deg); }
-  72% { transform: translateY(-30px) rotate(-3deg); }
-  80% { transform: translateY(-26px) rotate(3deg); }
-  88% { transform: translateY(0) rotate(5deg); }
-  92%, 100% { transform: translateY(0) rotate(0); }
-}
+/* The yellow line draws once it is on screen (app.js adds .ride-go) */
+.hero-line { animation-play-state: paused; }
+.hero.ride-go .hero-line { animation-play-state: running; }
+
+/* One-time board ride across the top of his name, ending in a kickflip off the edge.
+   Positions are measured in app.js so the board sits on the letters at any screen size. */
+.board-ride { position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; perspective: 520px; visibility: hidden; will-change: transform; }
+.board { display: block; transform-origin: 50% 70%; }
+
 @keyframes draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 /* Sections */

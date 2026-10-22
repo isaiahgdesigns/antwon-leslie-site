@@ -76,7 +76,7 @@
     }
   })();
 
-  /* ---------- Hero board ride: start when the yellow line is actually visible ---------- */
+  /* ---------- Hero: yellow line draws when it is visible ---------- */
   (function () {
     var hero = document.querySelector(".hero"), line = document.querySelector(".hero-line");
     if (!hero || !line) return;
@@ -86,6 +86,68 @@
       entries.forEach(function (e) { if (e.isIntersecting) { go(); io.disconnect(); } });
     }, { threshold: 1, rootMargin: "-90px 0px -60px 0px" }); // clear of the sticky header and the screen edge
     io.observe(line);
+  })();
+
+  /* ---------- Hero: board rides the top of his name, then kickflips off the edge (plays once) ---------- */
+  (function () {
+    var hero = document.querySelector(".hero");
+    var wrap = hero && hero.querySelector(".board-ride");
+    var name = $("firstName");
+    if (!wrap || !name || !wrap.animate) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    function start() {
+      var svg = wrap.querySelector(".board");
+      var hr = hero.getBoundingClientRect(), nr = name.getBoundingClientRect();
+      var cs = getComputedStyle(name);
+      var fs = parseFloat(cs.fontSize), lh = parseFloat(cs.lineHeight) || fs * 0.82;
+
+      // Find the top of the capital letters, whatever font actually loaded
+      var capTop = nr.top + fs * 0.08; // fallback guess
+      try {
+        var ctx = document.createElement("canvas").getContext("2d");
+        ctx.font = cs.fontWeight + " " + cs.fontSize + " " + cs.fontFamily;
+        var m = ctx.measureText("H");
+        var fa = m.fontBoundingBoxAscent, fd = m.fontBoundingBoxDescent;
+        if (fa && fd && m.actualBoundingBoxAscent) {
+          var baseline = nr.top + (lh - (fa + fd)) / 2 + fa;
+          capTop = baseline - m.actualBoundingBoxAscent;
+        }
+      } catch (err) {}
+
+      var w = Math.max(54, Math.min(90, nr.width * 0.16)), h = w * 26 / 90;
+      svg.setAttribute("width", w); svg.setAttribute("height", h);
+      var wheelsY = h * (24.6 / 26);                // wheel bottoms sit at 24.6 of 26 in the artwork
+      var y0 = capTop - hr.top - wheelsY;           // board top when its wheels rest on the letters
+      var L0 = nr.left - hr.left;                   // board left edge at the start of the name
+      var Le = nr.right - hr.left - w * 0.6;        // where the pop happens, near the last letter
+      // Keep the exit on screen: on a phone the name nearly fills the width, so the board drops beside the last letter
+      var Lend = Math.min(nr.right - hr.left + w * 0.9, hr.width - w - 6);
+      Lend = Math.max(Lend, Le + w * 0.35);
+      var D = 3200;
+
+      wrap.style.visibility = "visible";
+      wrap.animate([
+        { offset: 0,    transform: "translate(" + L0 + "px," + (y0 - 80) + "px)", opacity: 0, easing: "cubic-bezier(.3,0,.9,.6)" },
+        { offset: 0.10, transform: "translate(" + L0 + "px," + y0 + "px)", opacity: 1, easing: "cubic-bezier(.4,0,.6,1)" },
+        { offset: 0.58, transform: "translate(" + Le + "px," + y0 + "px)", opacity: 1, easing: "cubic-bezier(.2,.5,.4,1)" },
+        { offset: 0.70, transform: "translate(" + (Le + (Lend - Le) * 0.65) + "px," + (y0 - 8) + "px)", opacity: 1, easing: "cubic-bezier(.4,0,.8,.7)" },
+        { offset: 0.86, transform: "translate(" + Lend + "px," + (y0 + 80) + "px)", opacity: 1, easing: "cubic-bezier(.5,0,1,.8)" },
+        { offset: 1,    transform: "translate(" + (Lend + 10) + "px," + (y0 + 250) + "px)", opacity: 0 }
+      ], { duration: D, fill: "both" });
+
+      // The kickflip: one full turn around the board's long axis, with a little nose-up pop
+      svg.animate([
+        { offset: 0,    transform: "rotateX(0deg) rotate(0deg)" },
+        { offset: 0.58, transform: "rotateX(0deg) rotate(0deg)", easing: "ease-out" },
+        { offset: 0.62, transform: "rotateX(0deg) rotate(-12deg)", easing: "linear" },
+        { offset: 0.82, transform: "rotateX(360deg) rotate(2deg)", easing: "ease-out" },
+        { offset: 1,    transform: "rotateX(360deg) rotate(9deg)" }
+      ], { duration: D, fill: "both" });
+    }
+
+    var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+    ready.then(function () { setTimeout(start, 350); });
   })();
 
   /* ---------- Reels ---------- */
