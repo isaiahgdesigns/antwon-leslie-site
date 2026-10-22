@@ -104,6 +104,9 @@ p { margin: 0; }
   animation: ride 2.2s cubic-bezier(.45,.05,.4,1) .3s both;
 }
 .board { display: block; transform-origin: 50% 80%; animation: ollie 2.2s linear .3s both; }
+/* The ride waits until the line is on screen (app.js adds .ride-go), so phones see it too */
+.hero-line, .board-ride, .board { animation-play-state: paused; }
+.hero.ride-go .hero-line, .hero.ride-go .board-ride, .hero.ride-go .board { animation-play-state: running; }
 @keyframes ride { from { transform: translateX(0); } to { transform: translateX(calc(100vw + 90px)); } }
 @keyframes ollie {
   0%, 58% { transform: translateY(0) rotate(0); }

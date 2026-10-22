@@ -76,6 +76,18 @@
     }
   })();
 
+  /* ---------- Hero board ride: start when the yellow line is actually visible ---------- */
+  (function () {
+    var hero = document.querySelector(".hero"), line = document.querySelector(".hero-line");
+    if (!hero || !line) return;
+    function go() { hero.classList.add("ride-go"); }
+    if (!("IntersectionObserver" in window)) { go(); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { go(); io.disconnect(); } });
+    }, { threshold: 1, rootMargin: "-90px 0px -60px 0px" }); // clear of the sticky header and the screen edge
+    io.observe(line);
+  })();
+
   /* ---------- Reels ---------- */
   (function () {
     var g = $("reelGrid"), list = S.reels || [];
