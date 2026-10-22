@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Antwon Leslie | Skateboarder</title>
+  <meta name="description" content="Official site of Antwon Leslie, Midwest skateboarder. Clips, photos, gear, and how to sponsor or collaborate.">
+  <meta property="og:title" content="Antwon Leslie | Skateboarder">
+  <meta property="og:description" content="Clips, photos, gear, and how to sponsor or collaborate.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#d6d3cc">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Hanken+Grotesk:wght@400;500;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Antwon Leslie, back to top">A. Leslie</a>
+    <nav aria-label="Main">
+      <a href="#reels">Reels</a>
+      <a href="#mission">Mission</a>
+      <a href="#instagram">Instagram</a>
+      <a href="#youtube">YouTube</a>
+      <a href="#sponsors">Sponsors</a>
+      <a href="#gear">Gear</a>
+      <a href="#bloopers">Bloopers</a>
+    </nav>
+    <button class="btn btn-solid" type="button" data-open-contact>Work with me</button>
+  </header>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div class="wrap">
+        <h1 class="hero-name"><span id="firstName">Antwon</span><span id="lastName">Leslie</span></h1>
+      </div>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="hero-tag" id="tagline"></p>
+          <p class="hero-intro" id="intro"></p>
+          <div class="hero-actions">
+            <a class="btn btn-solid" href="#reels">Watch the reels</a>
+            <button class="btn btn-line" type="button" data-open-contact>Sponsor or collaborate</button>
+          </div>
+        </div>
+        <figure class="hero-frame" id="heroFrame" aria-label="Featured clip"></figure>
+      </div>
+      <div class="centerline hero-line" aria-hidden="true"></div>
+    </section>
+
+    <!-- REELS -->
+    <section class="section dark" id="reels">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Reels</h2>
+          <p>Short clips from the street and the park. Tap one to watch it full size.</p>
+        </div>
+        <div class="reel-grid" id="reelGrid"></div>
+      </div>
+    </section>
+
+    <div class="centerline" aria-hidden="true"></div>
+
+    <!-- MISSION -->
+    <section class="section dark" id="mission">
+      <div class="wrap mission">
+        <div>
+          <h2>Mission</h2>
+          <p class="mission-statement" id="missionStatement"></p>
+        </div>
+        <div>
+          <h3>Goals</h3>
+          <ul class="goals" id="goalList"></ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="centerline" aria-hidden="true"></div>
+
+    <!-- INSTAGRAM -->
+    <section class="section paper" id="instagram">
+      <div class="wrap">
+        <div class="section-head split">
+          <div>
+            <h2>Instagram</h2>
+            <p>Scroll the latest posts without leaving the page.</p>
+          </div>
+          <a class="btn btn-line" id="igLink" href="#" target="_blank" rel="noopener noreferrer">Open @duccaman on Instagram</a>
+        </div>
+        <div class="ig-scroller" id="igScroller" tabindex="0" aria-label="Instagram posts, scroll sideways"></div>
+      </div>
+    </section>
+
+    <!-- YOUTUBE -->
+    <section class="section" id="youtube">
+      <div class="wrap">
+        <div class="section-head split">
+          <div>
+            <h2>YouTube</h2>
+            <p>Full parts and longer edits.</p>
+          </div>
+          <a class="btn btn-line" id="ytLink" href="#" target="_blank" rel="noopener noreferrer" hidden>Open the channel on YouTube</a>
+        </div>
+        <div class="yt-grid" id="ytGrid"></div>
+      </div>
+    </section>
+
+    <!-- SPONSORS -->
+    <section class="section paper" id="sponsors">
+      <div class="wrap">
+        <div class="section-head split">
+          <div>
+            <h2>Sponsors</h2>
+            <p>The brands backing the work, and room for more.</p>
+          </div>
+          <button class="btn btn-solid" type="button" data-open-contact data-reason="Sponsorship">Become a sponsor</button>
+        </div>
+        <div class="sponsor-grid" id="sponsorGrid"></div>
+      </div>
+    </section>
+
+    <!-- GEAR -->
+    <section class="section" id="gear">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Gear</h2>
+          <p>What I ride and where I got it, in case you are curious.</p>
+        </div>
+        <div class="gear-wrap">
+          <table class="gear">
+            <thead><tr><th scope="col">Item</th><th scope="col">Brand</th><th scope="col">Where I got it</th></tr></thead>
+            <tbody id="gearBody"></tbody>
+          </table>
+        </div>
+        <p class="disclaimer">No affiliation. I am not sponsored by, paid by, or partnered with any brand in this list unless it also appears under Sponsors. These links are here for curiosity only, and I earn nothing from them.</p>
+      </div>
+    </section>
+
+    <!-- BLOOPERS -->
+    <section class="section paper" id="bloopers">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Bloopers</h2>
+          <p>The tries you do not see in the edit.</p>
+        </div>
+        <div class="blooper-grid" id="blooperGrid"></div>
+      </div>
+    </section>
+
+    <!-- PHOTOS (hidden until there are 6-9 strong stills; remove the comment markers to restore)
+    <section class="section" id="photos">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Photos</h2>
+          <p>Stills from sessions and trips.</p>
+        </div>
+        <div class="photo-grid" id="photoGrid"></div>
+      </div>
+    </section>
+    -->
+
+    <!-- CONTACT BAND -->
+    <section class="section dark band" id="contact">
+      <div class="wrap band-inner">
+        <h2>Want to sponsor, film, or collab?</h2>
+        <p>Send a message. It goes straight to my inbox.</p>
+        <button class="btn btn-solid btn-big" type="button" data-open-contact>Send a message</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap foot">
+      <p>&copy; <span id="year"></span> Antwon Leslie</p>
+      <ul class="foot-links">
+        <li><a id="footIg" href="#" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+        <li><a id="footYt" href="#" target="_blank" rel="noopener noreferrer" hidden>YouTube</a></li>
+        <li><a id="footFb" href="#" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- MEDIA VIEWER -->
+  <dialog class="viewer" id="viewer" aria-label="Media viewer">
+    <button class="close" type="button" data-close aria-label="Close">Close</button>
+    <div class="viewer-body" id="viewerBody"></div>
+  </dialog>
+
+  <!-- CONTACT FORM -->
+  <dialog class="contact" id="contactDialog" aria-labelledby="contactTitle">
+    <form id="contactForm" novalidate>
+      <div class="contact-head">
+        <h2 id="contactTitle">Get in touch</h2>
+        <button class="close" type="button" data-close aria-label="Close">Close</button>
+      </div>
+      <p class="contact-note">Sponsors, brands, filmers, shops and event organizers are all welcome.</p>
+
+      <label>Your name
+        <input name="name" type="text" autocomplete="name" maxlength="100" required>
+      </label>
+      <label>Email
+        <input name="email" type="email" autocomplete="email" maxlength="150" required>
+      </label>
+      <label><span>Company or team <span class="opt">(optional)</span></span>
+        <input name="org" type="text" autocomplete="organization" maxlength="150">
+      </label>
+      <label>What is this about?
+        <select name="reason" id="reason">
+          <option>Sponsorship</option>
+          <option>Product or gear support</option>
+          <option>Media or feature</option>
+          <option>Filming or event</option>
+          <option>Something else</option>
+        </select>
+      </label>
+      <label>Message
+        <textarea name="message" rows="5" maxlength="4000" required></textarea>
+      </label>
+      <!-- Spam trap: real people never see or fill this -->
+      <div class="hp" aria-hidden="true"><label>Website <input name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
+
+      <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+      <div class="contact-actions">
+        <button class="btn btn-solid" type="submit" id="sendBtn">Send message</button>
+        <button class="btn btn-line" type="button" data-close>Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
