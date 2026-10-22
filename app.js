@@ -76,18 +76,6 @@
     }
   })();
 
-  /* ---------- Hero: yellow line draws when it is visible ---------- */
-  (function () {
-    var hero = document.querySelector(".hero"), line = document.querySelector(".hero-line");
-    if (!hero || !line) return;
-    function go() { hero.classList.add("ride-go"); }
-    if (!("IntersectionObserver" in window)) { go(); return; }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { if (e.isIntersecting) { go(); io.disconnect(); } });
-    }, { threshold: 1, rootMargin: "-90px 0px -60px 0px" }); // clear of the sticky header and the screen edge
-    io.observe(line);
-  })();
-
   /* ---------- Hero: board rides the top of his name, then kickflips off the edge (plays once) ---------- */
   (function () {
     var hero = document.querySelector(".hero");
@@ -102,47 +90,66 @@
       var cs = getComputedStyle(name);
       var fs = parseFloat(cs.fontSize), lh = parseFloat(cs.lineHeight) || fs * 0.82;
 
-      // Find the top of the capital letters, whatever font actually loaded
-      var capTop = nr.top + fs * 0.08; // fallback guess
+      // Find the top and bottom of the capital letters, whatever font actually loaded
+      var capTop = nr.top + fs * 0.08, baseline = capTop + fs * 0.72; // fallback guesses
       try {
         var ctx = document.createElement("canvas").getContext("2d");
         ctx.font = cs.fontWeight + " " + cs.fontSize + " " + cs.fontFamily;
         var m = ctx.measureText("H");
         var fa = m.fontBoundingBoxAscent, fd = m.fontBoundingBoxDescent;
         if (fa && fd && m.actualBoundingBoxAscent) {
-          var baseline = nr.top + (lh - (fa + fd)) / 2 + fa;
+          baseline = nr.top + (lh - (fa + fd)) / 2 + fa;
           capTop = baseline - m.actualBoundingBoxAscent;
         }
       } catch (err) {}
 
       var w = Math.max(54, Math.min(90, nr.width * 0.16)), h = w * 26 / 90;
       svg.setAttribute("width", w); svg.setAttribute("height", h);
-      var wheelsY = h * (24.6 / 26);                // wheel bottoms sit at 24.6 of 26 in the artwork
-      var y0 = capTop - hr.top - wheelsY;           // board top when its wheels rest on the letters
-      var L0 = nr.left - hr.left;                   // board left edge at the start of the name
-      var Le = nr.right - hr.left - w * 0.6;        // where the pop happens, near the last letter
-      // Keep the exit on screen: on a phone the name nearly fills the width, so the board drops beside the last letter
-      var Lend = Math.min(nr.right - hr.left + w * 0.9, hr.width - w - 6);
-      Lend = Math.max(Lend, Le + w * 0.35);
-      var D = 3200;
+      var wheelsY = h * (24.6 / 26);                 // wheel bottoms sit at 24.6 of 26 in the artwork
+      var y0 = capTop - hr.top - wheelsY;            // board top when riding on the letters
+      var gY = baseline - hr.top;                    // the landing line sits at the bottom of "ANTWON"
+      var yLand = gY - wheelsY;                      // board top when riding on the landing line
+      var L0 = nr.left - hr.left;                    // board left edge at the start of the name
+      var nameRight = nr.right - hr.left;
+      var Le = nameRight - w * 0.6;                  // where the pop happens, near the last letter
+      var lineStart = nameRight + 10;                // the landing line starts just past the last letter
+      var Lland = Math.min(nameRight + w * 0.6, hr.width - w - 4); // landing spot, kept on screen
+      Lland = Math.max(Lland, Le + w * 0.35);
+      var D = 4200;
+
+      // The landing line: draws out to the right edge, then fades once the board is gone
+      var exit = document.createElement("div");
+      exit.className = "centerline";
+      exit.setAttribute("aria-hidden", "true");
+      exit.style.cssText = "position:absolute;z-index:1;pointer-events:none;opacity:0;transform-origin:left center;" +
+        "left:" + lineStart + "px;top:" + gY + "px;width:" + Math.max(0, hr.width - lineStart) + "px;";
+      hero.appendChild(exit);
+      exit.animate([
+        { offset: 0,    opacity: 0, transform: "scaleX(0)" },
+        { offset: 0.28, opacity: 1, transform: "scaleX(0)", easing: "cubic-bezier(.3,.5,.4,1)" },
+        { offset: 0.50, opacity: 1, transform: "scaleX(1)" },
+        { offset: 0.93, opacity: 1, transform: "scaleX(1)" },
+        { offset: 1,    opacity: 0, transform: "scaleX(1)" }
+      ], { duration: D, fill: "both" });
 
       wrap.style.visibility = "visible";
       wrap.animate([
         { offset: 0,    transform: "translate(" + L0 + "px," + (y0 - 80) + "px)", opacity: 0, easing: "cubic-bezier(.3,0,.9,.6)" },
-        { offset: 0.10, transform: "translate(" + L0 + "px," + y0 + "px)", opacity: 1, easing: "cubic-bezier(.4,0,.6,1)" },
-        { offset: 0.58, transform: "translate(" + Le + "px," + y0 + "px)", opacity: 1, easing: "cubic-bezier(.2,.5,.4,1)" },
-        { offset: 0.70, transform: "translate(" + (Le + (Lend - Le) * 0.65) + "px," + (y0 - 8) + "px)", opacity: 1, easing: "cubic-bezier(.4,0,.8,.7)" },
-        { offset: 0.86, transform: "translate(" + Lend + "px," + (y0 + 80) + "px)", opacity: 1, easing: "cubic-bezier(.5,0,1,.8)" },
-        { offset: 1,    transform: "translate(" + (Lend + 10) + "px," + (y0 + 250) + "px)", opacity: 0 }
+        { offset: 0.09, transform: "translate(" + L0 + "px," + y0 + "px)", opacity: 1, easing: "cubic-bezier(.4,0,.6,1)" },
+        { offset: 0.48, transform: "translate(" + Le + "px," + y0 + "px)", opacity: 1, easing: "cubic-bezier(.3,.6,.5,1)" },
+        { offset: 0.58, transform: "translate(" + (Le + (Lland - Le) * 0.4) + "px," + (y0 - 12) + "px)", opacity: 1, easing: "cubic-bezier(.5,0,.9,.6)" },
+        { offset: 0.74, transform: "translate(" + Lland + "px," + yLand + "px)", opacity: 1, easing: "cubic-bezier(.4,0,.9,.85)" },
+        { offset: 1,    transform: "translate(" + (hr.width + 20) + "px," + yLand + "px)", opacity: 1 }
       ], { duration: D, fill: "both" });
 
-      // The kickflip: one full turn around the board's long axis, with a little nose-up pop
+      // The kickflip: one full turn around the board's long axis, with a little nose-up pop. It lands flat.
       svg.animate([
         { offset: 0,    transform: "rotateX(0deg) rotate(0deg)" },
-        { offset: 0.58, transform: "rotateX(0deg) rotate(0deg)", easing: "ease-out" },
-        { offset: 0.62, transform: "rotateX(0deg) rotate(-12deg)", easing: "linear" },
-        { offset: 0.82, transform: "rotateX(360deg) rotate(2deg)", easing: "ease-out" },
-        { offset: 1,    transform: "rotateX(360deg) rotate(9deg)" }
+        { offset: 0.48, transform: "rotateX(0deg) rotate(0deg)", easing: "ease-out" },
+        { offset: 0.51, transform: "rotateX(0deg) rotate(-12deg)", easing: "cubic-bezier(.3,.2,.4,1)" },
+        { offset: 0.70, transform: "rotateX(360deg) rotate(4deg)", easing: "ease-out" },
+        { offset: 0.74, transform: "rotateX(360deg) rotate(0deg)" },
+        { offset: 1,    transform: "rotateX(360deg) rotate(0deg)" }
       ], { duration: D, fill: "both" });
     }
 
